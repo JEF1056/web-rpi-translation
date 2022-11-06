@@ -1,0 +1,17 @@
+name: web-rpi-ml
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.9
+  - pip=22.2.2
+  - pytorch=1.12.1
+  - cudatoolkit=11.6
+  - cudnn=8.1.0
+  - pip:
+    - simplet5
+    - tensorflow
+    - pandas
+    - tensorflowjs
+    - sentencepiece
