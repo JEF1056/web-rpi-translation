@@ -55,4 +55,15 @@ json.dump(temp, open(os.path.join(path, "tokenizer", "vocab_model.json"), "w"))
 
 model.save_pretrained(os.path.join(path, "model"), saved_model=True)
 
+converter = tf.lite.TFLiteConverter.from_saved_model(os.path.join(path, "model/saved_model/1"))
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+# converter.inference_input_type = tf.int8  # or tf.uint8
+# converter.inference_output_type = tf.int8  # or tf.uint8
+tflite_model = converter.convert()
+os.mkdir(os.path.join(path, "tflite"))
+with open(os.path.join(path, "tflite", "model.tflite"), 'wb') as f:
+    f.write(tflite_model)
+
+# convert to tensorflowjs
 os.system(f"tensorflowjs_converter --input_format=tf_saved_model --quantize_uint8='*' {path}/model/saved_model/1 {path}/web")

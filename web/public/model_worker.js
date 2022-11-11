@@ -7,9 +7,9 @@ importScripts(
 const max_len = 64;
 let model = null;
 let temperature = 0.9;
-let top_k = 10;
+let top_k = 2; // Since this is translation, we want consistent results
 
-function top_k_top_p_filtering(logits, top_k, top_p) {
+function top_k_filtering(logits, top_k) {
     // top_k refers to the top k highest values in the logits.
     // It needs to be done before top_p, since the probability distribution will be different once there are only k values.
     // Also massive yolo moment but top_p is too painful for my sleep-deprived brain so uhh top-k will have to do
@@ -77,8 +77,9 @@ function generate(event) {
             })
         );
         // model may randomly order the past_key_values, logits, and something else, so let's grab only the logits
+        console.log(_logits);
         for (let i = 0; i < _logits.length; i++) {
-            if (_logits[i].shape[2] === 32128) {
+            if (_logits[i].shape[2] === 250112) {
                 logits = _logits[i];
                 break;
             }
@@ -92,7 +93,7 @@ function generate(event) {
             )
             .squeeze()
             .div(temperature); // Take logits, slice to only the layer for the next value and apply temperature; lower temperature = bigger disparity between values, larger temperature = smaller disparity between values
-        const filtered = tf.tidy(() => top_k_top_p_filtering(preds, top_k)); // filter values by top_k and top_p
+        const filtered = tf.tidy(() => top_k_filtering(preds, top_k)); // filter values by top_k and top_p
         const softmax = tf.tidy(() => tf.softmax(filtered, (dim = -1))); // softmax clips all values to a relevant value in a softmax curve between 0-1, producing probabilities instead of arbitrary values
         const selected = tf
             .tidy(() => tf.multinomial(softmax, 1, null, true))

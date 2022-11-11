@@ -4,24 +4,12 @@ import {
     loadingProgressState,
     loadingWarmupState,
 } from "../components/LoadingScreen";
-import { continueTextState } from "../components/AppScreen";
 import { modelLoadedState } from "../index";
 
 const model_worker = new Worker("/model_worker.js");
 
-let warmup_prompt = "How do you spell";
+let warmup_prompt = "translate English to Mandarin: A journey of a thousand miles begins with a single step.";
 let warmup_started = false;
-
-fetch("/midnightquotes.txt")
-    .then((response) => response.text())
-    .then((data) => {
-        if (data) {
-            warmup_prompt = data.split("\n");
-            warmup_prompt =
-                warmup_prompt[Math.floor(Math.random() * warmup_prompt.length)];
-        }
-    })
-    .catch((err) => console.error(err));
 
 function predict(id, input) {
     // Model worker accepts UUID and message id
@@ -30,8 +18,6 @@ function predict(id, input) {
 }
 
 function ModelListener() {
-    const [continueText, setContinueText] = useRecoilState(continueTextState);
-
     const setLoadingProgress = useSetRecoilState(loadingProgressState);
     const setLoadingWarmup = useSetRecoilState(loadingWarmupState);
     const [modelLoaded, setModelLoaded] = useRecoilState(modelLoadedState);
@@ -59,17 +45,9 @@ function ModelListener() {
                 if (!modelLoaded) {
                     let detokenized = detokenize(message["tokens"]);
                     switch (message["id"]) {
-                        case "continue":
-                            setContinueText(
-                                detokenized.startsWith(" ")
-                                    ? detokenized
-                                    : " " + detokenized
-                            );
-                            console.log(continueText);
-                            break;
                         case "warmup":
                             setLoadingWarmup(
-                                warmup_prompt +
+                                warmup_prompt + "<br><br>" +
                                     (detokenized.startsWith(" ")
                                         ? detokenized
                                         : " " + detokenized)
@@ -81,7 +59,7 @@ function ModelListener() {
                 break;
             case "done":
                 if (!modelLoaded) {
-                    setTimeout(() => setModelLoaded(true), 2000);
+                    // setTimeout(() => setModelLoaded(true), 2000);
                     setLoadingProgress(100);
                 }
                 break;

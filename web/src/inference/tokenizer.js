@@ -10,8 +10,8 @@ const getToken = (token_score_pair) => {
     return token_score_pair[0];
 };
 
-let vocab_model = JSON.parse(localStorage.getItem("vocab_model"));
-let vocab = vocab_model ? vocab_model.map(getToken) : null;
+let vocab_model = null;
+let vocab = null;
 let separator = "\u2581";
 let tokenizer;
 
@@ -206,19 +206,14 @@ class SentencePieceTokenizer {
     }
 }
 
-if (vocab === null || vocab_model === null) {
-    fetch("model/tokenizer/vocab_model.json")
-        .then((result) => result.json())
-        .then((output) => {
-            localStorage.setItem("vocab_model", JSON.stringify(output));
-            vocab_model = output;
-            vocab = output.map(getToken);
-            tokenizer = new SentencePieceTokenizer(vocab_model);
-        })
-        .catch((err) => console.error(err));
-} else {
-    tokenizer = new SentencePieceTokenizer(vocab_model);
-}
+fetch("model/tokenizer/vocab_model.json")
+    .then((result) => result.json())
+    .then((output) => {
+        vocab_model = output;
+        vocab = output.map(getToken);
+        tokenizer = new SentencePieceTokenizer(vocab_model);
+    })
+    .catch((err) => console.error(err));
 
 // Wow, finally writing some useful functions
 function detokenize(input_ids) {
