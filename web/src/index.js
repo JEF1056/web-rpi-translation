@@ -3,10 +3,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { ModelListener } from "./inference/predict";
-import LoadingScreen from "./components/LoadingScreen";
+import LoadingScreen from "./screens/LoadingScreen";
 import { RecoilRoot, atom, useRecoilValue } from "recoil";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-// import AppScreen from "./components/AppScreen";
+import AppScreen from "./screens/AppScreen";
 
 export const modelLoadedState = atom({
     key: "modelLoaded",
@@ -18,7 +18,7 @@ function Layout() {
 
     return (
         <React.StrictMode>
-            {!loaded ? <LoadingScreen /> : ""}
+            {!loaded ? <LoadingScreen /> : <AppScreen />}
         </React.StrictMode>
     );
 }

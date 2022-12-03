@@ -7,7 +7,7 @@ importScripts(
 const max_len = 64;
 let model = null;
 let temperature = 0.9;
-let top_k = 2; // Since this is translation, we want consistent results
+let top_k = 1; // Since this is translation, we want consistent results
 
 function top_k_filtering(logits, top_k) {
     // top_k refers to the top k highest values in the logits.

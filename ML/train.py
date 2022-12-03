@@ -3,8 +3,8 @@ from simplet5 import SimpleT5
 from helpers import get_best_model_path
 
 model_type="mt5"
-base_model="google/mt5-small"
-model_dir = "model/mt5-small"
+base_model="google/mt5-base"
+model_dir = "model/mt5-base"
 
 train_ds = pd.read_csv("dataset/processed/train.csv").dropna().astype(str)
 valid_ds = pd.read_csv("dataset/processed/valid.csv").dropna().astype(str)
@@ -34,9 +34,10 @@ model.train(train_df=train_ds,
             eval_df=valid_ds,
             source_max_token_len = 64, 
             target_max_token_len = 64,
-            batch_size = 60,
+            batch_size = 32,
             max_epochs = 3,
             use_gpu = True,
             outputdir = model_dir,
-            early_stopping_patience_epochs = 1
+            early_stopping_patience_epochs = 1,
+            dataloader_num_workers=4,
             )
