@@ -1,4 +1,6 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { speakerInputs } from "../components/InputBox";
+import { predict } from "../inference/predict";
 
 export const languages = {
     Cantonese: "zh-HK",
@@ -25,28 +27,29 @@ function InputBoxLabel(props) {
     const currentSpeakerIndex = useRecoilValue(speakerIndex);
     const [currentSelectedLanguages, setCurrentSelectedLanguages] =
         useRecoilState(selectedLanguages);
+    const currentSpeakerInputs = useRecoilValue(speakerInputs);
 
     return (
-        <label class="label">
-            <span class="label-text-alt">
+        <label className="label">
+            <span className="label-text-alt">
                 Speaker {props.speakerIndex}{" "}
                 {currentSpeakerIndex === props.speakerIndex
                     ? "(speaking)"
                     : null}
             </span>
-            <span class="dropdown label-text-alt dropdown-end">
-                <label tabindex="0">
+            <span className="dropdown label-text-alt dropdown-end">
+                <label tabIndex="0">
                     {currentSelectedLanguages[props.speakerIndex - 1]}
                 </label>
                 <ul
-                    tabindex="0"
-                    class="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
+                    tabIndex="0"
+                    className="dropdown-content menu p-2 shadow bg-base-200 rounded-box w-52"
                 >
                     {Object.keys(languages)
                         .sort()
                         .map((language) =>
                             !currentSelectedLanguages.includes(language) ? (
-                                <li>
+                                <li key={`${language}-${props.speakerIndex}`}>
                                     <div
                                         onClick={() => {
                                             let newSelectedLanguages =
@@ -60,6 +63,23 @@ function InputBoxLabel(props) {
                                             ] = language;
                                             setCurrentSelectedLanguages(
                                                 newSelectedLanguages
+                                            );
+
+                                            predict(
+                                                (props.speakerIndex - 1 ? 0 : 1)+1,
+                                                currentSpeakerInputs[
+                                                    props.speakerIndex - 1
+                                                        ? 0
+                                                        : 1
+                                                ],
+                                                newSelectedLanguages[
+                                                    props.speakerIndex - 1
+                                                        ? 0
+                                                        : 1
+                                                ],
+                                                newSelectedLanguages[
+                                                    props.speakerIndex - 1
+                                                ]
                                             );
                                         }}
                                     >

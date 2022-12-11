@@ -122,6 +122,7 @@ function generate(event) {
     self.postMessage({
         type: "done",
         id: id,
+        tokens: decoder_input_ids,
         time: Math.round((endTime - startTime) / 1000),
     });
 }

@@ -35,16 +35,16 @@ function AppScreen() {
 
     return (
         <div className="hero min-h-screen bg-base-400">
-            <div class="flex flex-col w-full border-opacity-50">
+            <div className="flex flex-col w-full border-opacity-50">
                 <InputBox
                     top={true}
                     text={isRecording ? transcript : ""}
                     speakerIndex={1}
                 />
-                <div class="divider">
-                    <div class="form-control">
+                <div className="divider">
+                    <div className="form-control">
                         <div
-                            class="tooltip"
+                            className="tooltip"
                             data-tip={
                                 !SpeechRecognition.browserSupportsSpeechRecognition()
                                     ? "Speech recognition is not supported by this browser"
@@ -59,6 +59,13 @@ function AppScreen() {
                                     isRecording = !isRecording;
                                     if (isRecording) {
                                         resetTranscript();
+                                        setCurrentSpeakerInputs(
+                                            setByArrayIndex(
+                                                currentSpeakerInputs,
+                                                currentSpeakerIndex - 1,
+                                                ""
+                                            )
+                                        );
                                         SpeechRecognition.startListening({
                                             language:
                                                 languages[
@@ -66,14 +73,9 @@ function AppScreen() {
                                                         currentSpeakerIndex - 1
                                                     ]
                                                 ],
-                                            continuous: true,
                                         });
                                     } else {
-                                        let content = `${
-                                            currentSpeakerInputs[
-                                                currentSpeakerIndex - 1
-                                            ]
-                                        } ${transcript}`.trim();
+                                        let content = `${transcript}`.trim();
                                         SpeechRecognition.stopListening();
                                         setCurrentSpeakerInputs(
                                             setByArrayIndex(
@@ -103,18 +105,18 @@ function AppScreen() {
                                     : "🟢🎙️"}
                             </button>
                         </div>
-                        <label class="label cursor-pointer">
-                            <span class="label-text mr-5">Speaker 1</span>
+                        <label className="label cursor-pointer">
+                            <span className="label-text mr-5">Speaker 1</span>
                             <input
                                 type="checkbox"
-                                class="toggle"
+                                className="toggle"
                                 onClick={() =>
                                     setCurrentSpeakerIndex(
                                         currentSpeakerIndex === 1 ? 2 : 1
                                     )
                                 }
                             />
-                            <span class="label-text ml-5">Speaker 2</span>
+                            <span className="label-text ml-5">Speaker 2</span>
                         </label>
                     </div>
                 </div>

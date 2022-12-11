@@ -18,20 +18,22 @@ function InputBox(props) {
     const currentSpeakerIndex = useRecoilValue(speakerIndex);
 
     return (
-        <div class="form-control p-5">
+        <div className="form-control p-5">
             {props.top ? (
                 <InputBoxLabel speakerIndex={props.speakerIndex} />
             ) : null}
             {!props.top ? (
                 <textarea
-                    class="textarea my-5 resize-none"
+                    className="textarea my-5 resize-none"
+                    readOnly
                     value={currentSpeakerTranslations[props.speakerIndex - 1]}
                     disabled
                 ></textarea>
             ) : null}
             <textarea
-                class="textarea textarea-bordered h-24"
-                placeholder="Input text here"
+                className="textarea textarea-bordered h-24"
+                placeholder="Waiting for speech input..."
+                readOnly={true}
                 value={currentSpeakerInputs[props.speakerIndex - 1].concat(
                     props.text && props.speakerIndex === currentSpeakerIndex
                         ? props.text
@@ -40,7 +42,8 @@ function InputBox(props) {
             ></textarea>
             {props.top ? (
                 <textarea
-                    class="textarea my-5 resize-none"
+                    className="textarea my-5 resize-none"
+                    readOnly
                     value={currentSpeakerTranslations[props.speakerIndex - 1]}
                     disabled
                 ></textarea>

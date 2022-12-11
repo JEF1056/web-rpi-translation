@@ -57,20 +57,22 @@ function ModelListener() {
                             break;
                         default:
                     }
-                } else {
-                    setCurrentSpeakerTranslations(
-                        setByArrayIndex(
-                            currentSpeakerTranslations,
-                            currentSpeakerIndex - 1,
-                            detokenized
-                        )
-                    );
                 }
                 break;
             case "done":
                 if (!modelLoaded) {
                     setTimeout(() => setModelLoaded(true), 2000);
                     setLoadingProgress(100);
+                } else {
+                    let detokenized = detokenize(message["tokens"]);
+                    console.log("output", detokenized)
+                    setCurrentSpeakerTranslations(
+                        setByArrayIndex(
+                            currentSpeakerTranslations,
+                            message["id"] - 1,
+                            detokenized
+                        )
+                    );
                 }
                 break;
             default:
