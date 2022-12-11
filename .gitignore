@@ -156,6 +156,5 @@ cython_debug/
 /ML/lightning_logs
 /ML/dataset/raw*/
 /ML/dataset/processed
-/web/public/model
 
 node_modules
