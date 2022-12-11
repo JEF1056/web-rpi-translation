@@ -51,17 +51,29 @@ registerRoute(
 registerRoute(
     // Add in any other file extensions or routing criteria as needed.
     ({ url }) =>
+        url.origin === self.location.origin && url.pathname.endsWith(".bin"), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+    new StaleWhileRevalidate({
+        cacheName: "model",
+        plugins: [
+            // Ensure that once this runtime cache reaches a maximum size the
+            // least-recently used images are removed.
+            new ExpirationPlugin({ maxEntries: 100 }),
+        ],
+    })
+);
+
+registerRoute(
+    // Add in any other file extensions or routing criteria as needed.
+    ({ url }) =>
         (url.origin === "cdn.jsdelivr.net" ||
             url.origin === self.location.origin) &&
-        (url.pathname.endsWith(".bin") ||
-            url.pathname.endsWith(".json") ||
-            url.pathname.endsWith(".js")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+        (url.pathname.endsWith(".json") || url.pathname.endsWith(".js")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
     new StaleWhileRevalidate({
         cacheName: "webcache",
         plugins: [
             // Ensure that once this runtime cache reaches a maximum size the
             // least-recently used images are removed.
-            new ExpirationPlugin({ maxEntries: 50000 }),
+            new ExpirationPlugin({ maxEntries: 100 }),
         ],
     })
 );
