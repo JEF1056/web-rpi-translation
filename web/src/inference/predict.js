@@ -1,5 +1,5 @@
 import { tokenize, detokenize } from "./tokenizer";
-import { useRecoilState, useSetRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
     loadingProgressState,
     loadingWarmupState,
@@ -7,7 +7,6 @@ import {
 import { speakerTranslations } from "../components/InputBox";
 import { modelLoadedState } from "../index";
 import { setByArrayIndex } from "../helpers";
-import { speakerIndex } from "../components/InputBoxLabel";
 
 const model_worker = new Worker("/model_worker.js");
 
@@ -27,7 +26,6 @@ function ModelListener() {
     const [currentSpeakerTranslations, setCurrentSpeakerTranslations] =
         useRecoilState(speakerTranslations);
     const [modelLoaded, setModelLoaded] = useRecoilState(modelLoadedState);
-    const currentSpeakerIndex = useRecoilValue(speakerIndex);
 
     model_worker.addEventListener("message", (event) => {
         let message = event.data;
