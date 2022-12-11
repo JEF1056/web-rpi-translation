@@ -67,7 +67,7 @@ registerRoute(
     ({ url }) =>
         (url.origin === "cdn.jsdelivr.net" ||
             url.origin === self.location.origin) &&
-        (url.pathname.endsWith(".json") || url.pathname.endsWith(".js")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+        (url.pathname.endsWith(".json") || url.pathname.endsWith(".js") || url.pathname.endsWith(".png") || url.pathname.endsWith(".ico")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
     new StaleWhileRevalidate({
         cacheName: "webcache",
         plugins: [
