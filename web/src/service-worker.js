@@ -53,13 +53,11 @@ registerRoute(
     ({ url }) =>
         (url.origin === "cdn.jsdelivr.net" ||
             url.origin === self.location.origin) &&
-        (url.pathname.endsWith(".png") ||
-            url.pathname.endsWith(".bin") ||
+        (url.pathname.endsWith(".bin") ||
             url.pathname.endsWith(".json") ||
-            url.pathname.endsWith(".js") ||
-            url.pathname.endsWith(".txt")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
+            url.pathname.endsWith(".js")), // Customize this strategy as needed, e.g., by changing to CacheFirst.
     new StaleWhileRevalidate({
-        cacheName: "images",
+        cacheName: "webcache",
         plugins: [
             // Ensure that once this runtime cache reaches a maximum size the
             // least-recently used images are removed.
